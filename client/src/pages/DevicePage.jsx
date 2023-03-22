@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -6,15 +6,26 @@ import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import bigstar from '../assets/bigstar.svg'
+import { useParams } from 'react-router-dom';
+import { fetchOneDevice } from '../http/deviceAPI';
 
 
 const devicePage = () => {
-    const device = { id: 1, name: '12 Pro', price: 20000, rating: 5, img: 'img' }
-    const description = [
-        { id: 1, title: 'Memory', description: '5 gb' },
-        { id: 2, title: 'Camera', description: '20mpx' },
-        { id: 1, title: 'Processor', description: 'M-4' }
-    ]
+    // const device = { id: 1, name: '12 Pro', price: 20000, rating: 5, img: 'img' }
+    // const description = [
+    //     { id: 1, title: 'Memory', description: '5 gb' },
+    //     { id: 2, title: 'Camera', description: '20mpx' },
+    //     { id: 1, title: 'Processor', description: 'M-4' }
+    // ]
+
+
+    const [device, setDevice] = useState({ info: [] })
+    const { id } = useParams()
+   
+    useEffect(() => {
+        fetchOneDevice(id).then(data => setDevice(data))
+    }, [])
+
     return (
         <Container>
             <Row className='mt-4'>
@@ -43,7 +54,7 @@ const devicePage = () => {
             </Row>
             <Row className='d-flex flex-column m-1'>
                 <h1>Характеристики</h1>
-                {description.map((info) => {
+                {device.info.map((info) => {
                     return <Row key={info.id} style={{ background: info.id % 2 === 0 && 'lightgray', padding: 10 }}>
                         {info.title} : {info.description}
                     </Row>
